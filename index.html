@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Player</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    height: 100%;
+    background: #000;
+    font-family: system-ui, -apple-system, sans-serif;
+    color: #fff;
+  }
+  #wrap {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  #player {
+    flex: 1;
+    min-height: 0;
+    position: relative;
+  }
+  #player iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+  #msg {
+    padding: 12px 16px;
+    font-size: 13px;
+    color: #aaa;
+    background: #111;
+    display: none;
+  }
+</style>
+</head>
+<body>
+
+<div id="wrap">
+  <div id="player"></div>
+  <div id="msg">
+    Player unavailable — the source did not load. Check the embed URL.
+  </div>
+</div>
+
+<script>
+  // ---- change only this line ----
+  const SRC = "https://vidsrc.mov/embed/movie?tmdb=550";
+
+  // TV instead: "https://vidsrc.mov/embed/tv?tmdb=1399&season=1&episode=1"
+
+  const holder = document.getElementById("player");
+  const msg = document.getElementById("msg");
+
+  const frame = document.createElement("iframe");
+  frame.src = SRC;
+  frame.allowFullscreen = true;
+  frame.setAttribute("allowfullscreen", "");
+  frame.setAttribute("allow", "fullscreen; autoplay; encrypted-media; picture-in-picture");
+  frame.setAttribute("referrerpolicy", "origin");
+  frame.setAttribute("sandbox", "allow-scripts allow-same-origin allow-presentation allow-forms");
+
+  // Show a hint if the frame never loads (blocked framing, dead mirror, etc.)
+  const timer = setTimeout(() => { msg.style.display = "block"; }, 8000);
+  frame.addEventListener("load", () => {
+    clearTimeout(timer);
+    msg.style.display = "none";
+  });
+
+  holder.appendChild(frame);
+</script>
+
+</body>
+</html>
